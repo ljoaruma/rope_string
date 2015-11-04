@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rope_string", "rope_string.vcproj", "{CFA58409-BFE2-4649-A5DD-705519E466BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFA58409-BFE2-4649-A5DD-705519E466BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CFA58409-BFE2-4649-A5DD-705519E466BE}.Debug|Win32.Build.0 = Debug|Win32
+		{CFA58409-BFE2-4649-A5DD-705519E466BE}.Release|Win32.ActiveCfg = Release|Win32
+		{CFA58409-BFE2-4649-A5DD-705519E466BE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
