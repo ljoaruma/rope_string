@@ -24,6 +24,7 @@ class rope_string_test : public CPPUNIT_NS::TestFixture
 	// = Concat
 
 	CPPUNIT_TEST(Concat_basic_basic);
+	CPPUNIT_TEST(Concat_basic_concat);
 
 	//--------------------------------------------------------------------------
 
@@ -130,6 +131,31 @@ public:
 
 		CPPUNIT_ASSERT_EQUAL(expected.size(), p_->size());
 		CPPUNIT_ASSERT_EQUAL(expected, p_->linearized());
+	}
+
+	void
+	Concat_basic_concat()
+	{
+		const string strings[] =
+		{
+			"1st",
+			"2nd",
+			"3rd",
+		};
+
+		*p_ = strings[0];
+		rope rhs(strings[1]);
+		rhs.concat(rope(strings[2]));
+
+		const rope r = p_->concat(rhs);
+
+		const string expected = strings[0] + strings[1] + strings[2];
+		CPPUNIT_ASSERT_EQUAL(expected.size(), r.size());
+		CPPUNIT_ASSERT_EQUAL(expected, r.linearized());
+
+		CPPUNIT_ASSERT_EQUAL(expected.size(), p_->size());
+		CPPUNIT_ASSERT_EQUAL(expected, p_->linearized());
+
 	}
 
 };
