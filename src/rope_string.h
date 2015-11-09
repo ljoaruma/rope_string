@@ -40,40 +40,40 @@ public:
 	class const_iterator;
 
 	rope_string()
-		: m_ptop(NULL)
+		: _p_top(NULL)
 	{
 	}
 
 	explicit
 	rope_string(
 		const string& s)
-		: m_ptop(NULL)
+		: _p_top(NULL)
 	{
-		m_ptop = new rope_node_leaf(s);
+		_p_top = new rope_node_leaf(s);
 	}
 
 	rope_string(
 		const rope_string& rhs)
-		: m_ptop(rhs.m_ptop)
+		: _p_top(rhs._p_top)
 	{
-		if (NULL != m_ptop) m_ptop->set();
+		if (NULL != _p_top) { _p_top->set(); }
 	}
 
 	~rope_string()
 	{
-		if (NULL != m_ptop) m_ptop->release();
+		if (NULL != _p_top) { _p_top->release() };
 	}
 
 	rope_string&
 	operator=(
 		const rope_string& rhs)
 	{
-		if (m_ptop == rhs.m_ptop) { return *this; }
+		if (_p_top == rhs._p_top) { return *this; }
 
-		rhs.m_ptop->set();
-		if (NULL != m_ptop) m_ptop->release();
+		rhs._p_top->set();
+		if (NULL != _p_top) { _p_top->release(); }
 
-		m_ptop = rhs.m_ptop;
+		_p_top = rhs._p_top;
 
 		return *this;
 	}
@@ -82,9 +82,9 @@ public:
 	operator=(
 		const string& rhs)
 	{
-		if (NULL != m_ptop) { m_ptop->release(); }
+		if (NULL != _p_top) { _p_top->release(); }
 
-		m_ptop = new rope_node_leaf(rhs);
+		_p_top = new rope_node_leaf(rhs);
 
 		return *this;
 	}
@@ -94,13 +94,13 @@ public:
 	string
 	linearized() const
 	{
-		if (NULL == m_ptop){ return string(); }
-		if (LEAF == m_ptop->m_type) { return ((rope_node_leaf*)m_ptop)->m_string; }
+		if (NULL == _p_top){ return string(); }
+		if (LEAF == _p_top->_type) { return ((rope_node_leaf*)_p_top)->m_string; }
 
 		string result;
 		result.reserve(size());
 
-		if (CONCAT == m_ptop->m_type) { _linearized_concat((rope_node_concat*)m_ptop, result); }
+		if (CONCAT == _p_top->_type) { _linearized_concat((rope_node_concat*)_p_top, result); }
 
 		return result;
 	}
@@ -114,16 +114,24 @@ private:
 		string& result)
 	{
 		// lhs
-		if (LEAF == p->m_plhs->m_type)
-		{ result.insert(result.end(), ((rope_node_leaf*)p->m_plhs)->m_string.begin(), ((rope_node_leaf*)p->m_plhs)->m_string.end()); }
-		else if (CONCAT == p->m_plhs->m_type)
-		{ _linearized_concat((rope_node_concat*)p->m_plhs, result); }
+		if (LEAF == p->_p_lhs->_type)
+		{
+			result.insert(result.end(), ((rope_node_leaf*)p->_p_lhs)->m_string.begin(), ((rope_node_leaf*)p->_p_lhs)->m_string.end());
+		}
+		else if (CONCAT == p->_p_lhs->_type)
+		{
+			_linearized_concat((rope_node_concat*)p->_p_lhs, result);
+		}
 
 		// rhs
-		if (LEAF == p->m_prhs->m_type)
-		{ result.insert(result.end(), ((rope_node_leaf*)p->m_prhs)->m_string.begin(), ((rope_node_leaf*)p->m_prhs)->m_string.end()); }
-		else if (CONCAT == p->m_prhs->m_type)
-		{ _linearized_concat((rope_node_concat*)p->m_prhs, result); }
+		if (LEAF == p->_p_rhs->_type)
+		{
+			result.insert(result.end(), ((rope_node_leaf*)p->_p_rhs)->m_string.begin(), ((rope_node_leaf*)p->_p_rhs)->m_string.end());
+		}
+		else if (CONCAT == p->_p_rhs->_type)
+		{
+			_linearized_concat((rope_node_concat*)p->_p_rhs, result);
+		}
 
 	}
 
@@ -160,9 +168,9 @@ public:
 	size_type
 	size() const
 	{
-		if (NULL == m_ptop) return 0;
+		if (NULL == _p_top) { return 0 };
 
-		return m_ptop->size();
+		return _p_top->size();
 	}
 
 	// =
@@ -171,10 +179,10 @@ public:
 	concat(
 		const rope_string& rhs)
 	{
-		rope_node_base* p = new rope_node_concat(m_ptop, rhs.m_ptop);
+		rope_node_base* p = new rope_node_concat(_p_top, rhs._p_top);
 		if (p == NULL) { return *this; }
 
-		m_ptop = p;
+		_p_top = p;
 
 		return *this;
 	}
@@ -234,15 +242,16 @@ public:
 	public:
 
 		rope_node_base()
-			: m_count(1), m_type(NODE_BASE)
+			: _count(1), _type(NODE_BASE)
 		{}
 
 		virtual size_type size() const = 0;
 
-		void set() const{ ++m_count; }
-		void release() const{
-			--m_count;
-			if (0 >= m_count){delete this;}
+		void set() const{ ++_count; }
+		void release() const
+		{
+			--_count;
+			if (0 >= _count){ delete this; }
 		}
 
 	protected:
@@ -251,11 +260,11 @@ public:
 
 	private:
 
-		mutable size_type m_count;
+		mutable size_type _count;
 
 	public:
 
-		NODE_TYPE m_type;
+		NODE_TYPE _type;
 
 	};
 
@@ -267,7 +276,7 @@ public:
 			: rope_node_base()
 			, m_string(rhs)
 		{
-			m_type = LEAF;
+			_type = LEAF;
 		}
 
 		size_type size() const { return m_string.size(); }
@@ -293,39 +302,39 @@ public:
 		rope_node_concat(
 			const rope_node_base* lhs,
 			const rope_node_base* rhs)
-			: m_size(0)
-			, m_plhs(lhs)
-			, lhs_size(0)
-			, m_prhs(rhs)
-			, rhs_size(0)
+			: _size(0)
+			, _p_lhs(lhs)
+			, _lhs_size(0)
+			, _p_rhs(rhs)
+			, _rhs_size(0)
 		{
-			m_type = CONCAT;
+			_type = CONCAT;
 
-			if (NULL != m_plhs) { m_plhs->set(); lhs_size = m_plhs->size(); }
-			if (NULL != m_prhs) { m_prhs->set(); rhs_size = m_prhs->size(); }
+			if (NULL != _p_lhs) { _p_lhs->set(); _lhs_size = _p_lhs->size(); }
+			if (NULL != _p_rhs) { _p_rhs->set(); _rhs_size = _p_rhs->size(); }
 
-			m_size = lhs_size + rhs_size;
+			_size = _lhs_size + _rhs_size;
 		}
 
-		size_type size() const { return m_size; }
+		size_type size() const { return _size; }
 
 	protected:
 
 		~rope_node_concat()
 		{
-			if (NULL != m_plhs) { m_plhs->release(); }
-			if (NULL != m_prhs) { m_prhs->release(); }
+			if (NULL != _p_lhs) { _p_lhs->release(); }
+			if (NULL != _p_rhs) { _p_rhs->release(); }
 		}
 
 	public:
 
-		size_type m_size;
+		size_type _size;
 
-		const rope_node_base* m_plhs;
-		size_type lhs_size;
+		const rope_node_base* _p_lhs;
+		size_type _lhs_size;
 
-		const rope_node_base* m_prhs;
-		size_type rhs_size;
+		const rope_node_base* _p_rhs;
+		size_type _rhs_size;
 
 	};
 
@@ -453,7 +462,7 @@ public:
 
 private:
 
-	rope_node_base* m_ptop;
+	rope_node_base* _p_top;
 
 };
 
