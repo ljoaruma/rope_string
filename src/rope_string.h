@@ -224,10 +224,10 @@ public:
 	};
 
 	// string = char string
-	// rope_string = [LEAF | SUBSTR | CONCAT]
-	// LEAF = string
-	// SUBSTR = LEAF
-	// CONCAT = [LEAF | SUBSTR | CONCAT]
+	// rope_string has [LEAF | SUBSTR | CONCAT]
+	// LEAF has string
+	// SUBSTR has LEAF
+	// CONCAT has [LEAF | SUBSTR | CONCAT]
 	//
 	// e.g
 	//
